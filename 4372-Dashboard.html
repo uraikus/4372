@@ -121,6 +121,15 @@
     background-color: rgba(30, 30, 30, .7);
     backdrop-filter: blur(3px);
    }
+   body {
+    background: linear-gradient(to bottom right, rgb(25, 25, 25), rgb(45, 45, 45)) fixed;
+   }
+   main {
+    background-color: white;
+    max-width: 1500px;
+    margin: auto;
+    padding: 3px;
+   }
    h1, h2 {
     padding: 0;
     margin: 3px;
@@ -159,10 +168,12 @@
     bottom: 0;
     left: 0;
    }
+   @media print {body {background: white;}}
   </style>
  </head>
  <body>
   <dialog><btn onclick="openBinder()">Open</btn> your Unit Training Binder directory...</dialog>
+  <main>
   <h1 style="text-align: center;">4372 Dashboard</h1>
   <btn onclick="refresh()">Refresh</btn>
   <input id="year" placeholder="Year..." onchange="loadYear(this.value)">
@@ -179,6 +190,7 @@
   <table id="4372">
     <tr><th>Name</th><th>Jan</th><th>Feb</th><th>Mar</th><th>Apr</th><th>May</th><th>Jun</th><th>Jul</th><th>Aug</th><th>Sep</th><th>Oct</th><th>Nov</th><th>Dec</th></tr>
   </table>
+  </main>
   <div id="status">starting...</div>
  </body>
 </html>
