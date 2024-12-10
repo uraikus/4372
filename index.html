@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <title>4372 Dashboard Instructions</title>
+  <script>
+   onload = load;
+   function load() {
+    let c = document.querySelectorAll('c');
+    c.forEach(c => {
+     c.onclick = () => c.innerText = c.innerText ? '' : '✔️';
+    })
+   }
+  </script>
+  <style>
+   body {
+    background: linear-gradient(to bottom right, rgb(25, 25, 25), rgb(45, 45, 45)) fixed;
+   }
+   main {
+    max-width: 800px;
+    margin: auto;
+    background-color: white;
+    padding: 10px;
+   }
+   h1 {
+    padding: 0;
+    margin: 5px 0;
+    text-align: center;
+   }
+   c {
+    counter-increment: checkbox;
+    height: 20px;
+    width: 20px;
+    display: inline-block;
+    border: 1px solid black;
+    cursor: pointer;
+    box-shadow: 0 0 3px black;
+    text-align: center;
+    vertical-align: middle;
+    justify-contents: center;
+    user-select: none;
+   }
+   div {
+    margin: 5px 0;
+   }
+   @media print {body {background: white;}}
+  </style>
+ </head>
+ <body>
+  <main>
+  <h1>4372 Dashbaord Instructions</h1>
+  <p>This application allows you to view all DAF 4372s in a single dashboard and modify them from the dashboard as well.<p>
+  <div><c></c> 1. <a href="DAF-4372.html" download="DAF 4372.html" target="_blank">Download</a> this HTML DAF 4372.</div>
+  <div><b>NOTE:</b> If you are using Microsoft Teams, you will want to open the directory with everyone's 4372s and click "Sync," then follow the instructions from File Explorer.</div>
+  <div><c></c> 2. Copy the downloaded "DAF 4372.html" into each member's folder on your computer/network drive.</div>
+  <div><c></c> 3. Edit each DAF 4372 with the "Year" and the "Controller Name", otherwise the Dashboard will not load their records.</div>
+  <div><c></c> 4. <a href="4372-Dashboard.html" download="4372 Dashboard.html" target="_blank">Download</a> the 4372 Dashboard and save it wherever.</a></div>
+  <div><c></c> 5. Open the Downloaded Dashboard and click "Open" button and select the parent directory of all your 4372s (it will scan subdirectories as well).</div>
+  <div><c></c> 6. Change the year to that of the 4372s, and will will populate with each individual of that year with every month's entries.</div>
+  <div><b>NOTE:</b> You can edit entries for a particular person of a particular month by clicking on the corresponding cell. It will physically update the 4372 as well as the tracker with the data.</div>
+  <div><b>Another NOTE:</b> If someone's record isn't showing, ensure that the year and name are on their 4372s.</div>
+  </main>
+ </body>
+</html>
