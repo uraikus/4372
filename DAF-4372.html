@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>DAF 4372</title>
+  </head>
+  <body>
+    <style>
+      h1 {
+        margin: 4px;
+        padding: 4px;
+        text-align: center;
+      }
+      table {
+        height: 100%;
+        width: 100%;
+      }
+      table, tr, td {
+        border-collapse: collapse;
+        border: 2px solid black;
+        font-size: 18px;
+        text-align: center;
+      }
+      td > * {
+        font-weight: bold;
+      }
+      td[colspan="7"] {text-align: left;}
+      block {
+        display: inline-block;
+        vertical-align: top;
+      }
+      span,block {
+        margin-right: 5px;
+      }
+      [ne] {font-weight: bold;}
+      [lrg] {font-size: 22px;}
+      #notifications {
+        position: fixed;
+        top: 10px;
+        right: 10px;
+      }
+      #notifications > div {
+        width: 300px;
+        border-radius: 5px;
+        box-shadow: 0 0 4px black;
+        color: white;
+        background-color: rgb(30, 30, 30);
+        font-size: 22px;
+        padding: 10px;
+      }
+      #save-btn {
+        position: fixed;
+        top: 10px;
+        left: 10px;
+        cursor: pointer;
+        border-radius: 5px;
+        box-shadow: 0 0 4px black;
+        color: white;
+        background-color: rgb(30, 30, 30);
+      }
+      @media print {[np] {display: none;}}
+    </style>
+    <script>onerror = e => alert(e);</script>
+    <script>
+      var fileHandle;
+      onload = load;
+      function load() {
+        document.querySelectorAll('td').forEach(e => e.contentEditable = e.getAttribute('ne') === '' ? false : 'plaintext-only');
+      }
+      onkeydown = saveKey;
+      function saveKey(ev) {
+        if (ev.key !== 's' || !ev.ctrlKey) return;
+        ev.preventDefault();
+        save();
+        return false;
+      }
+
+      async function save() {
+        let name = document.querySelector('#name').innerText.split(' ').shift().replace(',', '');
+        let year = document.querySelector('#year').innerText;
+        let formTitle =  `DAF 4372 (${name}-${year})`;
+        if (!fileHandle) {
+          const opts = {suggestedName: formTitle, types: [{description: "4374 HTML File", accept: {"text/html": [".html"]}}]};
+          fileHandle = await window.showSaveFilePicker(opts);
+        }
+        document.querySelector('#notifications').innerText = '';
+        document.title = formTitle;
+        let html = '<' + '!DOCTYPE html>' + document.documentElement.outerHTML;
+        let writable = await fileHandle.createWritable();
+        await writable.write(html);
+        await writable.close();
+        notify('Saved!');
+      }
+      function notify(text) {
+        let div = document.createElement('div');
+        div.innerText = text;
+        document.querySelector('#notifications').append(div);
+        setTimeout(() => div.remove(), 4000);
+      }
+
+    </script>
+    <div id="notifications" np></div>
+    <input type="button" value="Save" onclick="save()" id="save-btn" np>
+    <h1>RECORD OF CONTROLLER RECURRING TRAINING</h1>
+    <table>
+      <tr><td colspan="7" ne><block>CONTROLLER NAME/RANK:<br><sup>(Last, First, Middle Initial):</sup></block><span id="name" contenteditable="plaintext-only" lrg></span></td></tr>
+      <tr><td rowspan="2" ne>YEAR<div contenteditable="plaintext-only" id="year"></div></td><td colspan="4" ne>WRITTEN EXAMINATION SCORES</td><td rowspan="2" ne><div>DATE ADMINISTERED<br>MONTHLY SCENARIO</div></td><td rowspan="2" ne><div>PEFORMANCE<br>EVALUATION<br>(SAT/UNSAT)</div></td></tr>
+      <tr><td ne>GK</td><td ne>Conventional<br>EA</td><td ne>NC2<br>EA</td><td ne>Other</td></tr>
+      <tr><td ne>JAN:</td><td class="gk"></td><td class="conventional"></td><td class="nc2"></td><td class="other"></td><td class="date"></td><td class="evaluation"></td></tr>
+      <tr><td colspan="7" ne><span>Remarks:</span><span contenteditable="plaintext-only" class="remarks"></span></td></tr>
+      <tr><td ne>FEB:</td><td class="gk"></td><td class="conventional"></td><td class="nc2"></td><td class="other"></td><td class="date"></td><td class="evaluation"></td></tr>
+      <tr><td colspan="7" ne><span>Remarks:</span><span contenteditable="plaintext-only" class="remarks"></span></td></tr>
+      <tr><td ne>MAR:</td><td class="gk"></td><td class="conventional"></td><td class="nc2"></td><td class="other"></td><td class="date"></td><td class="evaluation"></td></tr>
+      <tr><td colspan="7" ne><span>Remarks:</span><span contenteditable="plaintext-only" class="remarks"></span></td></tr>
+      <tr><td ne>APR:</td><td class="gk"></td><td class="conventional"></td><td class="nc2"></td><td class="other"></td><td class="date"></td><td class="evaluation"></td></tr>
+      <tr><td colspan="7" ne><span>Remarks:</span><span contenteditable="plaintext-only" class="remarks"></span></td></tr>
+      <tr><td ne>MAY:</td><td class="gk"></td><td class="conventional"></td><td class="nc2"></td><td class="other"></td><td class="date"></td><td class="evaluation"></td></tr>
+      <tr><td colspan="7" ne><span>Remarks:</span><span contenteditable="plaintext-only" class="remarks"></span></td></tr>
+      <tr><td ne>JUN:</td><td class="gk"></td><td class="conventional"></td><td class="nc2"></td><td class="other"></td><td class="date"></td><td class="evaluation"></td></tr>
+      <tr><td colspan="7" ne><span>Remarks:</span><span contenteditable="plaintext-only" class="remarks"></span></td></tr>
+      <tr><td ne>JUL:</td><td class="gk"></td><td class="conventional"></td><td class="nc2"></td><td class="other"></td><td class="date"></td><td class="evaluation"></td></tr>
+      <tr><td colspan="7" ne><span>Remarks:</span><span contenteditable="plaintext-only" class="remarks"></span></td></tr>
+      <tr><td ne>AUG:</td><td class="gk"></td><td class="conventional"></td><td class="nc2"></td><td class="other"></td><td class="date"></td><td class="evaluation"></td></tr>
+      <tr><td colspan="7" ne><span>Remarks:</span><span contenteditable="plaintext-only" class="remarks"></span></td></tr>
+      <tr><td ne>SEP:</td><td class="gk"></td><td class="conventional"></td><td class="nc2"></td><td class="other"></td><td class="date"></td><td class="evaluation"></td></tr>
+      <tr><td colspan="7" ne><span>Remarks:</span><span contenteditable="plaintext-only" class="remarks"></span></td></tr>
+      <tr><td ne>OCT:</td><td class="gk"></td><td class="conventional"></td><td class="nc2"></td><td class="other"></td><td class="date"></td><td class="evaluation"></td></tr>
+      <tr><td colspan="7" ne><span>Remarks:</span><span contenteditable="plaintext-only" class="remarks"></span></td></tr>
+      <tr><td ne>NOV:</td><td class="gk"></td><td class="conventional"></td><td class="nc2"></td><td class="other"></td><td class="date"></td><td class="evaluation"></td></tr>
+      <tr><td colspan="7" ne><span>Remarks:</span><span contenteditable="plaintext-only" class="remarks"></span></td></tr>
+      <tr><td ne>DEC:</td><td class="gk"></td><td class="conventional"></td><td class="nc2"></td><td class="other"></td><td class="date"></td><td class="evaluation"></td></tr>
+      <tr><td colspan="7" ne><span>Remarks:</span><span contenteditable="plaintext-only" class="remarks"></span></td></tr>
+    </table>
+    <b>AF FORM 4372, 20241209</b>
+  </body>
+</html>

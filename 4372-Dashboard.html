@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <title>4372 Dashboard</title>
+  <script>onerror = e => alert(e);</script>
+  <script>
+   var dir, records;
+   var qs = q => document.querySelector(q);
+   var qsa = q => document.querySelectorAll(q);
+
+   onload = load;
+   function load() {
+    qs('dialog').showModal();
+    qs('#year').value = new Date().getFullYear();
+   }
+   async function openBinder() {
+    dir = await showDirectoryPicker({mode: 'readwrite'});
+    qs('dialog').close();
+    refresh();
+   }
+   async function refresh() {
+    records = [];
+    await diver(dir);
+   }
+   async function diver(startingHandle) {
+     log('opening ' + startingHandle.name);
+     for await (const handle of startingHandle.values()) {
+      if (handle.kind === 'directory') await diver(handle);
+      else if (/\.html$/.test(handle.name)) {
+       qs('#status').innerText = 'opening file ' + handle.name;
+       let file = await handle.getFile();
+       let raw = await file.text();
+       let parser = new DOMParser();
+       xml = parser.parseFromString(raw, 'text/html');
+       if (!/^DAF 4372/.test(xml.querySelector('title').innerText)) return false;
+       let r = {
+        name: xml.querySelector('#name').innerText,
+        year: xml.querySelector('#year').innerText,
+        handle: handle,
+        xml
+       };
+       records.push(r);
+      }
+      loadYear();
+     }
+     log('');
+   }
+   function loadYear() {
+    year = qs('#year').value;
+    let rs = records.filter(v => v.year == year);
+    let table = qs('table');
+    while (table.rows.length > 1) table.deleteRow(1);
+    rs.forEach(r => {
+     let data = {
+      GKT: r.xml.querySelectorAll('.gk'),
+      ConEA: r.xml.querySelectorAll('.conventional'),
+      NC2EA: r.xml.querySelectorAll('.nc2'),
+      Other: r.xml.querySelectorAll('.other'),
+      Date: r.xml.querySelectorAll('.date'),
+      EvaluationSAT: r.xml.querySelectorAll('.evaluation'),
+      Remark: r.xml.querySelectorAll('.remarks')
+     }
+     let row = table.insertRow();
+     row.insertCell().innerText = r.name;
+     for (let x = 0; x < 12; x++) {
+      let cell = row.insertCell();
+      cell.className = 'month';
+      cell.onclick = () => editEntry(r, x, data);
+      let values = [];
+      for (let k in data) {
+       log([k, x, 'Object Length:', data[k].length].join(' '));
+       if (data[k][x].innerText) values.push(k[0]);
+      }
+      cell.innerText = values.join('');
+     }
+    })
+    log('');
+   }
+   function editEntry(record, x, XMLData) {
+    let dialog = qs('dialog');
+    dialog.innerText = '';
+    for (let k in XMLData) dialog.append(mirroredPart(k, XMLData[k][x]));
+    let saveBtn = document.createElement('btn');
+    saveBtn.innerText = 'Save';
+    saveBtn.onclick = () => saveEntry(record.handle, record.xml);
+    let closeBtn = document.createElement('btn');
+    closeBtn.innerText = 'Close';
+    closeBtn.onclick = () => dialog.close();
+    dialog.append(saveBtn, closeBtn);
+    dialog.showModal();
+   }
+   function mirroredPart(key, elem) {
+    let flex = document.createElement('flex');
+    let span = document.createElement('span');
+    span.innerText = key + ': ';
+    let textarea = document.createElement('textarea');
+    textarea.oninput = () => elem.innerText = textarea.value;
+    textarea.value = elem.innerText;
+    flex.append(span, textarea)
+    return flex;
+   }
+   async function saveEntry(fileHandle, xml) {
+    let ws = await fileHandle.createWritable();
+    await ws.write('<' + '!DOCTYPE html>' + xml.documentElement.outerHTML);
+    await ws.close();
+    qs('dialog').close();
+    refresh();
+   }
+   function log(status) {
+    qs('#status').innerText = status;
+   }
+  </script>
+  <style>
+   ::backdrop {
+    background-color: rgba(30, 30, 30, .7);
+    backdrop-filter: blur(3px);
+   }
+   h1, h2 {
+    padding: 0;
+    margin: 3px;
+   }
+   table {
+    width: 100%;
+    border-collapse: collapse;
+   }
+   table, tr, td {
+    border: 1px solid black;
+   }
+   btn {
+    display: inline-block;
+    cursor: pointer;
+    padding: 3px;
+    box-shadow: 0 0 3px black;
+    background-color: rgb(25, 25, 25);
+    color: white;
+    margin: 0 5px;
+   }
+   flex {
+    display: flex;
+   }
+   flex > textarea {
+    flex-grow: 1;
+   }
+   .month {
+    cursor: pointer;
+    text-align: center;
+   }
+   #status {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+   }
+  </style>
+ </head>
+ <body>
+  <dialog><btn onclick="openBinder()">Open</btn> your Unit Training Binder directory...</dialog>
+  <h1 style="text-align: center;">4372 Dashboard</h1>
+  <btn onclick="refresh()">Refresh</btn>
+  <input id="year" placeholder="Year..." onchange="loadYear(this.value)">
+  <div>
+   <h2>Legend:</h2>
+   G = GKT<br>
+   C = Conventional EA<br>
+   N = NC2 EA<br>
+   O = Other<br>
+   D = Evaluation Date<br>
+   E = Evaluation SAT/UNSAT<br>
+   R = Remark
+  </div>
+  <table id="4372">
+    <tr><th>Name</th><th>Jan</th><th>Feb</th><th>Mar</th><th>Apr</th><th>May</th><th>Jun</th><th>Jul</th><th>Aug</th><th>Sep</th><th>Oct</th><th>Nov</th><th>Dec</th></tr>
+  </table>
+  <div id="status">starting...</div>
+ </body>
+</html>
