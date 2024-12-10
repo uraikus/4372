@@ -100,11 +100,13 @@
     return flex;
    }
    async function saveEntry(fileHandle, xml) {
-    qs('dialog').close();
+    let d = qs('dialog');
+    d.innerText = 'saving...';
     let ws = await fileHandle.createWritable();
     await ws.write('<' + '!DOCTYPE html>' + xml.documentElement.outerHTML);
     await ws.close();
     refresh();
+    d.close();
    }
    function log(status) {
     qs('#status').innerText = status;
