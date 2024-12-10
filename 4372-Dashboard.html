@@ -77,8 +77,12 @@
     log('');
    }
    function editEntry(record, x, XMLData) {
+    let months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     let dialog = qs('dialog');
     dialog.innerText = '';
+    let h1 = document.createElement('h1');
+    h1.innerText = record.name + ' - ' + months[x];
+    dialog.append(h1);
     for (let k in XMLData) dialog.append(mirroredPart(k, XMLData[k][x]));
     let saveBtn = document.createElement('btn');
     saveBtn.innerText = 'Save';
@@ -127,6 +131,9 @@
    }
    table, tr, td {
     border: 1px solid black;
+   }
+   tr:hover td {
+    background-color: rgb(200, 200, 250);
    }
    btn {
     display: inline-block;
